@@ -114,9 +114,9 @@ const CreditRiskForm = () => {
     try {
       const apiData = convertFormDataToAPI(formData);
       
-      // Note: Using localhost:8000 as specified in requirements
-      // In production, this should be an environment variable
-      const response = await axios.post('http://localhost:8000/predict', apiData, {
+      // Using network IP for mobile access - change this to your computer's IP
+      // For localhost-only access, use: http://localhost:8000/predict
+      const response = await axios.post('http://192.168.178.25:8000/predict', apiData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -132,7 +132,7 @@ const CreditRiskForm = () => {
       } else if (error.response) {
         setApiError(`Server error: ${error.response.status}. Please check if the API is running.`);
       } else if (error.request) {
-        setApiError('Unable to connect to the API. Please ensure the API server is running on localhost:8000.');
+        setApiError('Unable to connect to the API. Please ensure the API server is running on 192.168.178.25:8000.');
       } else {
         setApiError('An unexpected error occurred. Please try again.');
       }
