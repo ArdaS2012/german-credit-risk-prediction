@@ -4,6 +4,7 @@ Serves the trained ML model with proper validation and monitoring.
 """
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 import pandas as pd
 import numpy as np
@@ -107,6 +108,15 @@ app = FastAPI(
     description="API for predicting credit risk using machine learning",
     version="1.0.0",
     lifespan=lifespan,
+)
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 
