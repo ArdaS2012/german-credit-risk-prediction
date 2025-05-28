@@ -26,6 +26,7 @@ MANIFEST
 .venv
 env/
 venv/
+venv_test/
 ENV/
 env.bak/
 venv.bak/
@@ -74,26 +75,24 @@ mlruns/
 # Model files (keep only the best model)
 models/*.joblib
 !models/best_model_*.joblib
-!models/preprocessor.joblib
+!models/preprocessor_*.joblib
 
-# Data files (optional - uncomment if you want to exclude data)
-# data/
-
-# Docker
-.dockerignore
+# Data files (keep only processed)
+data/raw/
+!data/processed/
 
 # Temporary files
 *.tmp
 *.temp
 .cache/
 
+# Docker
+.dockerignore
+
 # Coverage reports
 htmlcov/
-.tox/
 .coverage
 .coverage.*
-.cache
-nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
