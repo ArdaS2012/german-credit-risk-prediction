@@ -22,12 +22,13 @@ wheels/
 MANIFEST
 
 # Virtual environments
-venv/
-venv_test/
+.env
+.venv
 env/
+venv/
 ENV/
-.venv/
-.ENV/
+env.bak/
+venv.bak/
 
 # IDEs
 .vscode/
@@ -35,25 +36,6 @@ ENV/
 *.swp
 *.swo
 *~
-
-# Jupyter Notebook
-.ipynb_checkpoints
-
-# MLflow
-mlruns/
-mlflow.db
-*.db
-
-# Models (optional - you might want to track some models)
-# models/*.joblib
-# models/*.pkl
-
-# Data (optional - you might want to track processed data)
-# data/processed/
-
-# Logs
-logs/
-*.log
 
 # OS
 .DS_Store
@@ -63,6 +45,47 @@ logs/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# React build
+credit-risk-webapp/build/
+credit-risk-webapp/node_modules/
+
+# MLflow
+mlruns/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Model files (keep only the best model)
+models/*.joblib
+!models/best_model_*.joblib
+!models/preprocessor.joblib
+
+# Data files (optional - uncomment if you want to exclude data)
+# data/
+
+# Docker
+.dockerignore
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
 
 # Coverage reports
 htmlcov/
@@ -74,18 +97,4 @@ nosetests.xml
 coverage.xml
 *.cover
 .hypothesis/
-.pytest_cache/
-
-# Docker
-.dockerignore
-
-# Environment variables
-.env
-.env.local
-.env.*.local
-
-# Temporary files
-*.tmp
-*.temp
-temp/
-tmp/ 
+.pytest_cache/ 
