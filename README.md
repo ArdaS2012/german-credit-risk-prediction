@@ -1,155 +1,130 @@
-# German Credit Risk Prediction
+# German Credit Risk Prediction System
 
-A machine learning system for predicting credit risk using the UCI German Credit Dataset. This project implements a complete MLOps pipeline with data preprocessing, model training, API deployment, and monitoring.
+A machine learning system for credit risk assessment using the UCI German Credit Dataset. Predicts loan repayment probability through a REST API and web interface.
 
-## 🚀 **Quick Deployment**
+## Overview
 
-**Want to get started immediately?** 
+End-to-end MLOps pipeline that trains multiple ML models, provides a production API, and includes a web application for credit risk assessment.
 
-👉 **[📋 DEPLOYMENT GUIDE](DEPLOYMENT_GUIDE.md)** - Get the complete system running in 2 commands!
+**Dataset**: UCI German Credit Dataset (1,000 applications, 20 features)  
+**Best Model**: Random Forest with 85%+ accuracy and 0.85+ ROC-AUC score  
+**Tech Stack**: Python, FastAPI, React, Docker, MLflow
 
-- 🐳 **Docker from GitHub**: `docker run -d -p 8000:8000 ghcr.io/ardas2012/german-credit-risk-prediction:main`
-- 🌐 **Web Interface**: Clone repo → `npm install && npm start`
-- ⚡ **Ready in 2 minutes**: Full web app + API + documentation
+## Quick Start
 
----
-
-## 🎯 Project Overview
-
-This project develops a binary classification system to predict whether a customer is likely to repay a loan based on structured customer data. The system uses multiple machine learning algorithms and provides a REST API for real-time predictions.
-
-### Key Features
-
-- **Data Processing**: Robust preprocessing pipeline with categorical encoding and numerical scaling
-- **Multiple Models**: Logistic Regression, Random Forest, and XGBoost with hyperparameter tuning
-- **Experiment Tracking**: MLflow integration for comprehensive experiment management
-- **REST API**: FastAPI-based service with input validation and monitoring
-- **Containerization**: Docker support for easy deployment
-- **CI/CD Pipeline**: GitHub Actions workflow for automated testing and deployment
-- **Monitoring**: Prometheus metrics for production monitoring
-
-## 📊 Dataset
-
-- **Source**: [UCI German Credit Dataset](https://archive.ics.uci.edu/ml/datasets/statlog+(german+credit+data))
-- **Size**: 1,000 samples with 20 features
-- **Target**: Binary classification (creditworthy vs. not creditworthy)
-- **Features**: Mix of numerical (7) and categorical (13) attributes
-
-## 🏗️ Architecture
-
-```
-├── data/                   # Dataset storage
-├── src/                    # Source code
-│   ├── data_preprocessing.py   # Data preprocessing pipeline
-│   ├── model_training.py       # Model training with MLflow
-│   └── api.py                  # FastAPI application
-├── notebooks/              # Jupyter notebooks for EDA
-├── tests/                  # Unit tests
-├── models/                 # Trained model artifacts
-├── .github/workflows/      # CI/CD pipeline
-├── Dockerfile             # Container configuration
-└── requirements.txt       # Python dependencies
-```
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Python 3.8+
-- Docker (optional)
-- Git
-
-### Installation
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd german-credit-risk
-   ```
-
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-3. **Download and preprocess data**
-   ```bash
-   cd src
-   python data_preprocessing.py
-   ```
-
-4. **Train models**
-   ```bash
-   python model_training.py
-   ```
-
-5. **Start the API server**
-   ```bash
-   python api.py
-   ```
-
-The API will be available at `http://localhost:8000`
-
-## 📖 Usage
-
-### Data Preprocessing
-
-```python
-from src.data_preprocessing import GermanCreditPreprocessor
-
-# Initialize preprocessor
-preprocessor = GermanCreditPreprocessor()
-
-# Load and preprocess data
-df = preprocessor.load_data()
-X, y, feature_names = preprocessor.fit_transform(df)
-
-# Split data
-X_train, X_test, y_train, y_test = preprocessor.split_data(X, y)
-```
-
-### Model Training
-
-```python
-from src.model_training import CreditRiskModelTrainer
-
-# Initialize trainer
-trainer = CreditRiskModelTrainer()
-
-# Train all models
-models = trainer.train_all_models()
-
-# View results
-report = trainer.generate_model_report()
-```
-
-### API Usage
-
-#### Single Prediction
+### Docker Deployment (Recommended)
 
 ```bash
-curl -X POST "http://localhost:8000/predict" \
-     -H "Content-Type: application/json" \
-     -d '{
-       "checking_account_status": "A11",
-       "duration_months": 12,
-       "credit_history": "A30",
-       "purpose": "A40",
-       "credit_amount": 5000,
-       "savings_account": "A61",
-       "employment_since": "A73",
-       "installment_rate": 2,
-       "personal_status_sex": "A93",
-       "other_debtors": "A101",
-       "residence_since": 2,
-       "property": "A121",
-       "age": 35,
-       "other_installment_plans": "A143",
-       "housing": "A152",
-       "existing_credits": 1,
-       "job": "A173",
-       "dependents": 1,
-       "telephone": "A192",
-       "foreign_worker": "A201"
-     }'
+# Start API server
+docker run -d -p 8000:8000 ghcr.io/ardas2012/german-credit-risk-prediction:main
+
+# Start web application
+cd credit-risk-webapp && npm install && npm start
 ```
+
+**Access**: API at http://localhost:8000, Web App at http://localhost:3000, Docs at http://localhost:8000/docs
+
+### Local Development
+
+```bash
+# Setup
+git clone <repository-url> && cd german-credit-risk-prediction
+python -m venv venv && source venv/bin/activate  # Windows: venv\Scripts\activate
+pip install -r requirements.txt
+
+# Train models and start API
+cd src && python data_preprocessing.py && python model_training.py && python api.py &
+
+# Start web app (new terminal)
+cd credit-risk-webapp && npm install && npm start
+```
+
+## API Usage
+
+### Health Check
+```bash
+curl http://localhost:8000/health
+```
+
+### Make Prediction
+```bash
+curl -X POST "http://localhost:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "checking_account_status": "A11", "duration_months": 12, "credit_history": "A32",
+    "purpose": "A43", "credit_amount": 5000, "savings_account": "A61",
+    "employment_since": "A73", "installment_rate": 2, "personal_status_sex": "A93",
+    "other_debtors": "A101", "residence_since": 2, "property": "A121", "age": 35,
+    "other_installment_plans": "A143", "housing": "A152", "existing_credits": 1,
+    "job": "A173", "dependents": 1, "telephone": "A192", "foreign_worker": "A201"
+  }'
+```
+
+**Response**: `{"creditworthy":true,"probability":0.6308988869445707,"risk_score":0.36910111305542925,"timestamp":"2025-06-04T13:22:25.961819","model_version":"1.0.0"}`
+
+## Architecture
+
+```
+React Web App (Port 3000) → FastAPI (Port 8000) → ML Models (Joblib)
+```
+
+**Components**:
+- **Data Pipeline**: StandardScaler and OneHotEncoder preprocessing
+- **ML Models**: Logistic Regression, Random Forest, XGBoost with hyperparameter tuning
+- **API**: FastAPI with Pydantic validation and Prometheus metrics
+- **Frontend**: React with Tailwind CSS, mobile-responsive
+- **Deployment**: Docker containers with GitHub Actions CI/CD
+
+## Features
+
+### Machine Learning
+- Automated preprocessing (20 → 48 features after encoding)
+- Cross-validation and hyperparameter optimization with MLflow tracking
+- Automatic best model selection
+
+### Production API
+- Input validation for all 20 credit application fields
+- Single and batch prediction endpoints with health monitoring
+- CORS configuration for web integration
+
+### Web Application
+- User-friendly form with real-time validation and visual risk assessment
+- Mobile-optimized design, network accessible from any device
+
+## Project Structure
+
+```
+src/
+├── data_preprocessing.py     # Data pipeline
+├── model_training.py         # ML training
+└── api.py                    # FastAPI server
+credit-risk-webapp/           # React frontend
+tests/                        # Unit tests
+models/                       # Trained models
+Dockerfile                    # Container config
+```
+
+## Development
+
+### Testing
+```bash
+cd tests && python run_tests.py
+```
+
+### Custom Docker Build
+```bash
+docker build -t german-credit-risk . && docker run -d -p 8000:8000 german-credit-risk
+```
+
+### Network Access
+For mobile/other devices: Web App at http://192.168.1.100:3000, API at http://192.168.1.100:8000
+
+## Technical Details
+
+**ML Pipeline**: Trains 3 algorithms, selects best performer based on ROC-AUC  
+**Data Processing**: Categorical encoding and numerical scaling  
+**Validation**: 20 required fields with type and range checking  
+**Monitoring**: Prometheus metrics and health checks  
+**Security**: Non-root Docker user, input validation, CORS protection
+
+MIT License
